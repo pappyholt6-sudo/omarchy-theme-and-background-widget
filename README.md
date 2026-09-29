@@ -8,6 +8,8 @@ A top-bar widget for Omarchy with actions to:
 - Choose a theme
 - Remove a theme
 
+![Theme and background actions menu](preview.png)
+
 ## Install from GitHub
 
 ```bash
