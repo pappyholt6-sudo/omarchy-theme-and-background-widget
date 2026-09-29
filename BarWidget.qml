@@ -20,7 +20,6 @@ BarWidget {
     horizontalMargin: 7.5
     tooltipText: "Theme and background actions"
     onPressed: function(mouseButton) {
-      if (!root.bar) return
       if (mouseButton === Qt.LeftButton)
         Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " menu"])
       else if (mouseButton === Qt.RightButton)
