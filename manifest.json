@@ -3,9 +3,9 @@
   "id": "local.theme-picker",
   "name": "Omarchy Theme And Background Widget",
   "version": "1.0.0",
-  "author": "Local",
+  "author": "Patrick Holt",
   "license": "MIT",
-  "description": "Choose and apply any theme known to Omarchy from the top bar.",
+  "description": "Choose and apply Omarchy themes and backgrounds from the top bar.",
   "kinds": ["bar-widget"],
   "entryPoints": { "barWidget": "BarWidget.qml" },
   "barWidget": {
