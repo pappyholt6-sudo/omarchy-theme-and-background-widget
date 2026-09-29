@@ -25,6 +25,21 @@ BarWidget {
       else if (mouseButton === Qt.RightButton)
         Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " theme"])
     }
+
+    // Keep a direct mouse target as well as BarIconButton's bar registration.
+    // This is needed on shells where third-party bar widgets are rendered but
+    // their registered click target is not dispatched.
+    MouseArea {
+      anchors.fill: parent
+      z: 1
+      acceptedButtons: Qt.LeftButton | Qt.RightButton
+      onClicked: function(mouse) {
+        if (mouse.button === Qt.LeftButton)
+          Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " menu"])
+        else if (mouse.button === Qt.RightButton)
+          Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " theme"])
+      }
+    }
   }
 
   readonly property string pluginPath:
