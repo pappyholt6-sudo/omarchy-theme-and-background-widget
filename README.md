@@ -8,15 +8,27 @@ A top-bar widget for Omarchy with actions to:
 - Choose a theme
 - Remove a theme
 
-## Install
+## Install from GitHub
 
 ```bash
-./install.sh
+omarchy plugin add https://github.com/pappyholt6-sudo/theme-background-actions-widget.git --enable
+omarchy bar put local.theme-picker --section right
 omarchy restart shell
 ```
 
 The widget appears as **Theme Picker** in the top bar. Left-click opens the
-action menu. Right-click opens the theme switcher directly.
+action menu. Right-click opens the theme switcher directly. If it is already
+in your bar, skip the `omarchy bar put` line.
+
+## Install from a downloaded copy
+
+From inside this repository, run:
+
+```bash
+./install.sh
+omarchy bar put local.theme-picker --section right
+omarchy restart shell
+```
 
 ## Remove
 
