@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "local.theme-picker",
+  "name": "Theme Picker",
+  "version": "1.0.0",
+  "author": "Local",
+  "license": "MIT",
+  "description": "Choose and apply any theme known to Omarchy from the top bar.",
+  "kinds": ["bar-widget"],
+  "entryPoints": { "barWidget": "BarWidget.qml" },
+  "barWidget": {
+    "displayName": "Theme Picker",
+    "description": "Pick an installed or downloaded Omarchy theme",
+    "category": "Appearance",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}

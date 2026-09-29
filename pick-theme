@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+mode="${1:-theme}"
+
+if [[ "$mode" == "menu" ]]; then
+  action="$(omarchy menu select "Theme actions" "Add background" "Remove background" "Choose background" "Choose theme" "Remove theme" 2>/dev/null || true)"
+  case "$action" in
+    "Add background") mode="background" ;;
+    "Remove background") mode="remove-background" ;;
+    "Choose background") mode="background-switcher" ;;
+    "Choose theme") mode="theme" ;;
+    "Remove theme") mode="remove-theme" ;;
+    *) exit 0 ;;
+  esac
+fi
+
+if [[ "$mode" == "background-switcher" ]]; then
+  # This is the same route used by Super+Ctrl+Space; unlike the low-level
+  # image selector command, the menu route applies the selected background.
+  exec omarchy menu toggle background
+fi
+
+if [[ "$mode" == "remove-background" ]]; then
+  choice="$(cat "$HOME/.local/state/omarchy/current/theme.name" 2>/dev/null || true)"
+  [[ -n "$choice" ]] || exit 0
+  background_dir="$HOME/.config/omarchy/backgrounds/$choice"
+  [[ -d "$background_dir" ]] || exit 0
+  image="$(omarchy menu images --filterable "$background_dir" 2>/dev/null || true)"
+  image="$(readlink -f -- "$image" 2>/dev/null || true)"
+  [[ -f "$image" ]] || exit 0
+  case "$image" in
+    "$background_dir"/*) rm -- "$image" ;;
+    *) exit 0 ;;
+  esac
+  exec omarchy theme set "$choice"
+fi
+
+if [[ "$mode" == "remove-theme" ]]; then
+  picker_dir="$(mktemp -d)"
+  cleanup() { rm -rf -- "$picker_dir"; }
+  trap cleanup EXIT
+  count=0
+  while IFS= read -r theme_dir; do
+    theme="${theme_dir##*/}"
+    preview=""
+    for name in preview.png preview.jpg preview.jpeg preview.webp preview.gif preview.bmp; do
+      if [[ -f "$theme_dir/$name" ]]; then preview="$theme_dir/$name"; break; fi
+    done
+    if [[ -z "$preview" ]]; then
+      preview="$(find "$theme_dir/backgrounds" -maxdepth 1 -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' \
+        -o -iname '*.bmp' -o -iname '*.webp' \) -print -quit 2>/dev/null || true)"
+    fi
+    [[ -f "$preview" ]] || continue
+    extension="${preview##*.}"
+    ln -s -- "$preview" "$picker_dir/$theme.$extension"
+    count=$((count + 1))
+  done < <(find "$HOME/.config/omarchy/themes" -mindepth 1 -maxdepth 1 -type d -print 2>/dev/null | sort)
+  (( count > 0 )) || exit 0
+  selected="$(omarchy menu images --show-labels --filterable "$picker_dir" 2>/dev/null || true)"
+  choice="$(basename -- "$selected")"
+  choice="${choice%.*}"
+  [[ -n "$choice" ]] || exit 0
+  [[ -d "$HOME/.config/omarchy/themes/$choice" ]] || exit 0
+  exec omarchy theme remove "$choice"
+fi
+
+if [[ "$mode" == "background" ]]; then
+  # Build a newest-first staging list because the generic image menu sorts its
+  # directory entries alphabetically. The selected symlink is resolved below.
+  picker_dir="$(mktemp -d)"
+  cleanup() { rm -rf -- "$picker_dir"; }
+  trap cleanup EXIT
+  mapfile -t image_rows < <(
+    find -L "$HOME/Downloads" "$HOME/Pictures" "$HOME/.config/omarchy/backgrounds" \
+      -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \
+      -o -iname '*.gif' -o -iname '*.bmp' -o -iname '*.webp' \) \
+      -printf '%T@\t%p\n' 2>/dev/null | sort -nr
+  )
+  (( ${#image_rows[@]} > 0 )) || exit 0
+  index=0
+  for row in "${image_rows[@]}"; do
+    source="${row#*$'\t'}"
+    index=$((index + 1))
+    ln -s -- "$source" "$picker_dir/$(printf '%06d__%s' "$index" "$(basename -- "$source")")"
+  done
+  image="$(omarchy menu images --filterable "$picker_dir" 2>/dev/null || true)"
+  image="$(readlink -f -- "$image" 2>/dev/null || true)"
+  [[ -f "$image" ]] || exit 0
+
+  choice="$(cat "$HOME/.local/state/omarchy/current/theme.name" 2>/dev/null || true)"
+  [[ -n "$choice" ]] || exit 0
+  # The background switcher uses the current theme slug, not its display name.
+  background_dir="$HOME/.config/omarchy/backgrounds/$choice"
+  mkdir -p "$background_dir"
+  filename="$(basename -- "$image")"
+  target="$background_dir/$filename"
+  cp -- "$image" "$target"
+  active_theme="$(cat "$HOME/.local/state/omarchy/current/theme.name" 2>/dev/null || true)"
+  if [[ "$choice" != "$active_theme" ]]; then
+    omarchy theme set "$choice"
+  fi
+  omarchy theme bg set "$target"
+  exit 0
+fi
+
+if [[ "$mode" == "theme" ]]; then
+  exec omarchy theme switcher
+fi
