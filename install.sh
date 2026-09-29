@@ -12,5 +12,5 @@ chmod +x "$target_dir/pick-theme"
 omarchy-shell shell rescanPlugins >/dev/null 2>&1 || true
 omarchy plugin enable "$plugin_id" --yes >/dev/null 2>&1 || true
 
-echo "Installed Theme and Background Actions in the Omarchy top bar."
+echo "Installed Omarchy Theme And Background Widget in the top bar."
 echo "Restart the shell if it does not appear: omarchy restart shell"

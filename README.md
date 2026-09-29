@@ -1,4 +1,4 @@
-# Omarchy Theme and Background Actions
+# Omarchy Theme And Background Widget
 
 A top-bar widget for Omarchy with actions to:
 
@@ -13,12 +13,12 @@ A top-bar widget for Omarchy with actions to:
 ## Install from GitHub
 
 ```bash
-omarchy plugin add https://github.com/pappyholt6-sudo/theme-background-actions-widget.git --enable
+omarchy plugin add https://github.com/pappyholt6-sudo/omarchy-theme-and-background-widget.git --enable
 omarchy bar put local.theme-picker --section right
 omarchy restart shell
 ```
 
-The widget appears as **Theme Picker** in the top bar. 
+The widget appears as **Omarchy Theme And Background Widget** in the top bar.
 
 ## Install from a downloaded copy
 

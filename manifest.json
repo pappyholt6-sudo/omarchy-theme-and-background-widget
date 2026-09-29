@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "local.theme-picker",
-  "name": "Theme Picker",
+  "name": "Omarchy Theme And Background Widget",
   "version": "1.0.0",
   "author": "Local",
   "license": "MIT",
@@ -9,7 +9,7 @@
   "kinds": ["bar-widget"],
   "entryPoints": { "barWidget": "BarWidget.qml" },
   "barWidget": {
-    "displayName": "Theme Picker",
+    "displayName": "Omarchy Theme And Background Widget",
     "description": "Pick an installed or downloaded Omarchy theme",
     "category": "Appearance",
     "allowMultiple": false,
