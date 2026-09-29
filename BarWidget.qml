@@ -1,5 +1,6 @@
 import QtQuick
 import QtCore
+import Quickshell
 import qs.Ui
 import qs.Commons
 
@@ -21,9 +22,9 @@ BarWidget {
     onPressed: function(mouseButton) {
       if (!root.bar) return
       if (mouseButton === Qt.LeftButton)
-        root.bar.run(Util.shellQuote(root.pluginPath) + " menu")
+        Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " menu"])
       else if (mouseButton === Qt.RightButton)
-        root.bar.run(Util.shellQuote(root.pluginPath) + " theme")
+        Quickshell.execDetached(["bash", "-lc", Util.shellQuote(root.pluginPath) + " theme"])
     }
   }
 
