@@ -16,9 +16,7 @@ omarchy bar put local.theme-picker --section right
 omarchy restart shell
 ```
 
-The widget appears as **Theme Picker** in the top bar. Left-click opens the
-action menu. Right-click opens the theme switcher directly. If it is already
-in your bar, skip the `omarchy bar put` line.
+The widget appears as **Theme Picker** in the top bar. 
 
 ## Install from a downloaded copy
 
